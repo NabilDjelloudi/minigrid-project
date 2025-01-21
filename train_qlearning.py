@@ -18,7 +18,7 @@ gym.register(
 env = gym.make("MiniGrid-GoToDoor-5x5-v0", render_mode=None)
 env = env.unwrapped
 
-# Paramètres imposés par le professeur
+# Paramètres du liens
 alpha = 0.5  # Taux d'apprentissage
 gamma = 0.5  # Facteur de discount
 epsilon = 0.1  # Probabilité d'exploration
@@ -83,6 +83,9 @@ for episode in range(episodes):
         action = epsilon_greedy_policy(state, current_epsilon)
         update_visit_count(state)  # Mise à jour du compteur de visites
         next_obs, reward, terminated, truncated, info = env.step(action)
+        # Affichage de l'environnement toutes les 50 étapes
+        if step_count % 50 == 0:
+            env.render()
         next_state = get_agent_state()
 
         # Ajouter pénalité si bloqué au même état
@@ -133,7 +136,7 @@ for episode in range(episodes):
         break
 
     if (episode + 1) % 50 == 0:
-        print(f"Épisode {episode + 1}/{episodes} - Récompense totale normalisée : {normalized_total_reward:.2f}")
+        print(f"Épisode {episode + 1}/{episodes} - Récompense totale : {normalized_total_reward:.2f}")
         max_q_value = max([max(q_table[s].values()) for s in q_table])
         print(f"Épisode {episode + 1}: Max valeur Q {max_q_value:.4f}")
 
@@ -145,7 +148,7 @@ print("Historique des récompenses sauvegardé dans 'rewards_qlearning.csv'.")
 # Tracer l'évolution des récompenses
 plt.plot(reward_history)
 plt.xlabel('Épisodes')
-plt.ylabel('Récompense totale normalisée')
+plt.ylabel('Récompense totale ')
 plt.title("Évolution des récompenses avec Q-learning")
 plt.show()
 
