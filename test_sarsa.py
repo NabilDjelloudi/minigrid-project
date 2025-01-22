@@ -24,16 +24,16 @@ success_count = 0
 
 # Fonction pour obtenir l'état de l'agent
 def get_agent_state():
+    """Retourne l'état de l'agent sous forme d'un tuple."""
     agent_pos = env.unwrapped.agent_pos
     agent_dir = env.unwrapped.agent_dir
     target_color = env.mission.split()[-2]  # Extraire la couleur de la mission
     return (agent_pos[0], agent_pos[1], agent_dir, target_color)
 
 # Exécution du test
-# Modification dans le test pour vérifier la porte jaune uniquement
 for episode in range(test_episodes):
     obs, info = env.reset()
-    
+
     # Fixer la mission pour toujours aller à la porte jaune
     env.target_color = 'yellow'
     env.mission = f"go to the yellow door"
@@ -55,8 +55,8 @@ for episode in range(test_episodes):
         done = terminated or truncated
         step_count += 1
 
-        # Vérifier si la mission est accomplie pour la porte jaune
-        if env.mission == "go to the grey door" and reward > 0:
+        # Vérifier si la mission est accomplie
+        if reward > 0:
             success = True
             break
 

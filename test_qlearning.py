@@ -24,19 +24,20 @@ success_count = 0
 
 # Fonction pour obtenir l'état de l'agent
 def get_agent_state():
+    """Retourne l'état actuel de l'agent."""
     agent_pos = env.unwrapped.agent_pos
     agent_dir = env.unwrapped.agent_dir
     target_color = env.mission.split()[-2]  # Extraire la couleur de la mission
     return (agent_pos[0], agent_pos[1], agent_dir, target_color)
 
-# Exécution du test
+# Exécution des tests
 for episode in range(test_episodes):
     obs, info = env.reset()
-    
+
     # Fixer la mission pour toujours aller à la porte jaune
-    env.target_color = 'yellow'
-    env.mission = f"go to the yellow door"
-    
+    env.target_color = 'blue'
+    env.mission = f"go to the blue door"
+
     state = get_agent_state()
     done = False
     step_count = 0
@@ -46,9 +47,9 @@ for episode in range(test_episodes):
     while not done and step_count < 200:
         # Sélectionner la meilleure action à partir de la Q-table
         if state in q_table:
-            action = max(q_table[state], key=q_table[state].get)
+            action = max(q_table[state], key=q_table[state].get)  # Action avec la plus grande valeur
         else:
-            action = env.action_space.sample()  # Action aléatoire si état inconnu
+            action = env.action_space.sample()  # Action aléatoire si l'état est inconnu
 
         next_obs, reward, terminated, truncated, info = env.step(action)
         state = get_agent_state()
@@ -56,8 +57,8 @@ for episode in range(test_episodes):
         done = terminated or truncated
         step_count += 1
 
-        # Vérifier si la mission est accomplie pour la porte jaune
-        if env.mission == "go to the yellow door" and reward > 0:
+        # Vérifier si la récompense positive est obtenue
+        if reward > 0:
             success = True
             break
 
